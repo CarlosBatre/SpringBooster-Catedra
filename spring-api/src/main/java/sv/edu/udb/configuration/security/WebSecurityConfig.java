@@ -48,7 +48,7 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/h2-console/**", "/authentications/**").permitAll()
+                                .requestMatchers( "/authentications/**").permitAll()
                                 .anyRequest().authenticated()
                 );
         // Add the JWT Token filter before the UsernamePasswordAuthenticationFilter
