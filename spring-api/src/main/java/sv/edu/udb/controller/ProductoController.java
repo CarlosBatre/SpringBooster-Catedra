@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*") // Permite peticiones desde cualquier origen, puedes personalizar este valor.
+@CrossOrigin(origins = "*")
 @RequestMapping(path = "productos")
 public class ProductoController {
 

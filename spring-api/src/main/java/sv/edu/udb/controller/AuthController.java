@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "authentications")
+@RequestMapping(path = "auth")
 public class AuthController {
 
     private final JwtUtil jwtUtils;
