@@ -1,5 +1,25 @@
 package sv.edu.udb.controller;
 
-public class PedidoController {
-}
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import sv.edu.udb.controller.request.PedidoRequest;
+import sv.edu.udb.controller.response.PedidoResponse;
+import sv.edu.udb.service.PedidoService;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
+@RestController
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*")
+@RequestMapping(path = "pedidos")
+public class PedidoController {
+
+    private final PedidoService pedidoService;
+
+    @PostMapping
+    @ResponseStatus(CREATED)
+    public PedidoResponse realizarPedido(@Valid @RequestBody PedidoRequest request) {
+        return pedidoService.realizarPedido(request);
+    }
+}
