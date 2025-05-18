@@ -16,6 +16,7 @@ import sv.edu.udb.controller.response.PedidoResponse;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,4 +60,20 @@ public class PedidoServiceImpl implements PedidoService {
         Pedido pedidoGuardado = pedidoRepository.save(pedido);
         return pedidoMapper.toResponse(pedidoGuardado);
     }
+
+    @Override
+    public List<PedidoResponse> listarPedidos() {
+        List<Pedido> pedidos = pedidoRepository.findAll();
+        return pedidos.stream()
+                .map(pedidoMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public PedidoResponse obtenerPedidoPorId(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con ID: " + id));
+        return pedidoMapper.toResponse(pedido);
+    }
+
+
 }
