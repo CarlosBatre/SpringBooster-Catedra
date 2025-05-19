@@ -23,8 +23,8 @@ import
         org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
         ;
 import org.springframework.web.util.WebUtils;
-import sv.edu.udb.configuration.web.ApiError;
-import sv.edu.udb.configuration.web.ApiErrorWrapper;
+import com.garajeideas.login.jpaLogin.config.web.ApiError;
+import com.garajeideas.login.jpaLogin.config.web.ApiErrorWrapper;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Objects;
