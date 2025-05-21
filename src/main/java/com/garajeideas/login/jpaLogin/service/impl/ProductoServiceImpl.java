@@ -1,17 +1,20 @@
 package com.garajeideas.login.jpaLogin.service.impl;
 
+import com.garajeideas.login.jpaLogin.controller.request.ProductoRequest;
+import com.garajeideas.login.jpaLogin.controller.response.ProductoResponse;
+import com.garajeideas.login.jpaLogin.entity.Producto;
+import com.garajeideas.login.jpaLogin.repository.ProductoRepository;
+import com.garajeideas.login.jpaLogin.service.ProductoService;
+import com.garajeideas.login.jpaLogin.service.assembler.ProductoAssembler;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
-import com.garajeideas.login.jpaLogin.controller.response.ProductoResponse;
-import com.garajeideas.login.jpaLogin.controller.request.ProductoRequest;
-import com.garajeideas.login.jpaLogin.service.ProductoService;
-import com.garajeideas.login.jpaLogin.repository.ProductoRepository;
-import com.garajeideas.login.jpaLogin.service.mapper.ProductoMapper;
-import com.garajeideas.login.jpaLogin.entity.Producto;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,25 +24,35 @@ public class ProductoServiceImpl implements ProductoService {
     private final ProductoRepository productoRepository;
 
     @NonNull
-    private final ProductoMapper productoMapper;
+    private final ProductoAssembler productoAssembler;
+
+    @NonNull
+    private final PagedResourcesAssembler<Producto> pagedResourcesAssembler;
 
     @Override
-    public List<ProductoResponse> findAll() {
-        return productoMapper.toProductoResponseList(productoRepository.findAll());
+    public PagedModel<ProductoResponse> findAll(final Pageable pageable) {
+        return pagedResourcesAssembler.toModel(
+                productoRepository.findAll(pageable),
+                productoAssembler
+        );
     }
 
     @Override
     public ProductoResponse findById(final Long id) {
-        return productoMapper.toProductoResponse(
-                productoRepository.findById(id)
-                        .orElseThrow(() ->
-                                new EntityNotFoundException("Producto no encontrado con ID: " + id)));
+        return productoAssembler.getProductoMapper()
+                .toProductoResponse(
+                        productoRepository.findById(id)
+                                .orElseThrow(() ->
+                                        new EntityNotFoundException("Producto no encontrado con ID: " + id))
+                );
     }
 
     @Override
     public ProductoResponse save(final ProductoRequest productoRequest) {
-        final Producto producto = productoMapper.toProducto(productoRequest);
-        return productoMapper.toProductoResponse(productoRepository.save(producto));
+        final Producto producto = productoAssembler.getProductoMapper()
+                .toProducto(productoRequest);
+        return productoAssembler.getProductoMapper()
+                .toProductoResponse(productoRepository.save(producto));
     }
 
     @Override
@@ -59,7 +72,8 @@ public class ProductoServiceImpl implements ProductoService {
         productoExistente.setPrecio(productoRequest.getPrecio());
 
         productoRepository.save(productoExistente);
-        return productoMapper.toProductoResponse(productoExistente);
+        return productoAssembler.getProductoMapper()
+                .toProductoResponse(productoExistente);
     }
 
     @Override
