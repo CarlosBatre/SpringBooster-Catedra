@@ -3,7 +3,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import com.garajeideas.login.jpaLogin.controller.response.ProductoResponse;
 import com.garajeideas.login.jpaLogin.controller.request.ProductoRequest;
-import java.util.List;
 
 public interface ProductoService {
     PagedModel<ProductoResponse> findAll(Pageable pageable);
