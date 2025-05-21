@@ -1,6 +1,7 @@
 package com.garajeideas.login.jpaLogin.controller.response;
 
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PedidoResponse {
+public class PedidoResponse extends RepresentationModel<PedidoResponse> {
     private Long id;
     private String nombreCliente;
     private String direccion;
