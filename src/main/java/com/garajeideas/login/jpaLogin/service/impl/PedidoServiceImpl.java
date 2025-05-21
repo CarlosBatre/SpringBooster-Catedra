@@ -2,6 +2,9 @@ package com.garajeideas.login.jpaLogin.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import com.garajeideas.login.jpaLogin.controller.request.PedidoRequest;
 import com.garajeideas.login.jpaLogin.repository.ProductoRepository;
@@ -10,22 +13,27 @@ import com.garajeideas.login.jpaLogin.entity.Pedido;
 import com.garajeideas.login.jpaLogin.entity.Producto;
 import com.garajeideas.login.jpaLogin.repository.PedidoRepository;
 import com.garajeideas.login.jpaLogin.service.PedidoService;
+import com.garajeideas.login.jpaLogin.service.assembler.PedidoAssembler;
 import com.garajeideas.login.jpaLogin.service.mapper.PedidoMapper;
 import com.garajeideas.login.jpaLogin.controller.response.PedidoResponse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-
 @RequiredArgsConstructor
 public class PedidoServiceImpl implements PedidoService {
 
     private final PedidoRepository pedidoRepository;
+
     private final ProductoRepository productoRepository;
+
     private final PedidoMapper pedidoMapper;
+
+    private final PedidoAssembler pedidoAssembler;
+
+    private final PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
 
     @Override
     public PedidoResponse realizarPedido(PedidoRequest request) {
@@ -63,18 +71,17 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public List<PedidoResponse> listarPedidos() {
-        List<Pedido> pedidos = pedidoRepository.findAll();
-        return pedidos.stream()
-                .map(pedidoMapper::toResponse)
-                .collect(Collectors.toList());
+    public PagedModel<PedidoResponse> listarPedidos(Pageable pageable) {
+        return pagedResourcesAssembler.toModel(
+                pedidoRepository.findAll(pageable),
+                pedidoAssembler
+        );
     }
+
     @Override
     public PedidoResponse obtenerPedidoPorId(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con ID: " + id));
         return pedidoMapper.toResponse(pedido);
     }
-
-
 }
