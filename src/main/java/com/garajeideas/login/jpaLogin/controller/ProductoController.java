@@ -20,11 +20,6 @@ public class ProductoController {
 
     private final ProductoService productoService;
 
-    @GetMapping
-    public List<ProductoResponse> findAllProductos() {
-        return productoService.findAll();
-    }
-
     @GetMapping(path = "{id}")
     public ProductoResponse findProductoById(@PathVariable(name = "id") final Long id) {
         return productoService.findById(id);
