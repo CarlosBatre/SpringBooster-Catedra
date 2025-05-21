@@ -53,6 +53,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/users").permitAll()
+                        .requestMatchers("/productos/**").permitAll() //BORRAR LINEA DESPUES
+                        .requestMatchers("/pedidos/**").permitAll() //BORRAR LINEA DESPUES
                         .requestMatchers("/v1/home").authenticated()
                         .requestMatchers("/v1/admin").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
