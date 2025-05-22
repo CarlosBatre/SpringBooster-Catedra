@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import Dashboard from './components/pages/Dashboard';
+import Products from './components/pages/Products';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -11,6 +12,14 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route
+          path="/products"
+          element={
+            <PrivateRoute>
+              <Products />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={
@@ -24,6 +33,5 @@ function App() {
     </Router>
   );
 }
-
 
 export default App;

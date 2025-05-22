@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '../../services/api';
+import Products from './Products';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [cart, setCart] = useState([]);
+  const [notification, setNotification] = useState({ show: false, message: '' });
 
   {/* Función para cerrar sesión y redirigir al login */ }
   const handleLogout = async () => {
@@ -71,9 +74,40 @@ const Dashboard = () => {
     };
   }, [navigate]);
 
+  // Función para mostrar notificación
+  const showNotification = (message) => {
+    setNotification({ show: true, message });
+    setTimeout(() => {
+      setNotification({ show: false, message: '' });
+    }, 3000); // La notificación desaparecerá después de 3 segundos
+  };
 
+  const handleAddToCart = (product) => {
+    setCart(prevCart => {
+      // Buscar si el producto ya existe en el carrito
+      const existingProduct = prevCart.find(item => item.id === product.id);
+      if (existingProduct) {
+        showNotification(`Se agregó otra unidad de ${product.name} al carrito`);
+        // Si existe, incrementar la cantidad
+        return prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      showNotification(`${product.name} fue agregado al carrito`);
+      // Si no existe, agregar el producto con cantidad 1
+      return [...prevCart, { ...product, quantity: 1 }];
+    });
+  };
   return (
     <div className="min-h-screen bg-gray-100">
+      {/* Notificación */}
+      {notification.show && (
+        <div className="fixed top-4 right-4 z-50 bg-green-500 text-white px-6 py-3 mt-[4rem] rounded-md shadow-lg transition-opacity duration-300">
+          {notification.message}
+        </div>
+      )}
       {/* Barra de navegación principal */}
       <nav className="bg-gray-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -107,12 +141,9 @@ const Dashboard = () => {
               <div className="flex shrink-0 items-center">
                 <img className="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
               </div>
-              <div className="hidden sm:ml-6 sm:block">
-                <div className="flex space-x-4">
-                  <a href="#" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
-                  <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
-                  <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
-                  <a href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
+              <div className="hidden sm:ml-6 sm:block">              <div className="flex space-x-4">
+                  <a href="/dashboard" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
+                  <a href="/products" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Productos</a>
                 </div>
               </div>
             </div>
@@ -140,10 +171,9 @@ const Dashboard = () => {
                       strokeLinejoin="round" 
                       d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" 
                     />
-                  </svg>
-                  {/* Contador de items en el carrito */}
+                  </svg>                  {/* Contador de items en el carrito */}
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    0
+                    {cart.reduce((total, item) => total + item.quantity, 0)}
                   </span>
                 </a>
               </div>
@@ -200,20 +230,16 @@ const Dashboard = () => {
       <main>
         <img src="/image.png" alt="Imagen de bienvenida" className="mx-auto max-w-full h-auto" />
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="px-4 py-6 sm:px-0">
-            <div className="rounded-lg bg-white p-6 shadow">
-              <h1 className="text-2xl font-bold text-gray-900">Bienvenido, {user?.username}</h1>
-              <p className="mt-2 text-gray-600">Email: {user?.email}</p>
-              <button
-                onClick={handleLogout}
-                className="mt-4 rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-              >
-                Cerrar sesión
-              </button>
-            </div>
-          </div>
+          <Products onAddToCart={handleAddToCart} />
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white py-4">
+        <div className="container mx-auto text-center">
+          <p>&copy; 2023 Tu Empresa. Todos los derechos reservados.</p>
+        </div>
+      </footer>
     </div>
   );
 };

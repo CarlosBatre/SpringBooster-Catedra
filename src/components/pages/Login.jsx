@@ -9,10 +9,10 @@ const Login = () => {
 
   const handleLogin = async (credentials) => {
     try {
-      setError('');      const response = await loginUser(credentials);
+      setError('');
+      const response = await loginUser(credentials);
       if (response && response.token) {
         localStorage.setItem('token', response.token);
-        
         // Decodificar el token para obtener la información del usuario
         try {
           const base64Url = response.token.split('.')[1];
@@ -23,13 +23,11 @@ const Login = () => {
 
           const userData = JSON.parse(jsonPayload);
           localStorage.setItem('user', JSON.stringify({
-            username: userData.sub,
             email: userData.email
           }));
         } catch (error) {
           console.error('Error decodificando el token:', error);
         }
-
         navigate('/dashboard');
       } else {
         setError('Error: Respuesta inválida del servidor');
