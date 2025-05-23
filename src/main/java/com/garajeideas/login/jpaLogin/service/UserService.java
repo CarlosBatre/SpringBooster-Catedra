@@ -11,8 +11,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     public String getUsernameByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-            .orElse(null);
+        User user = userRepository.findByEmail(email);
         return user != null ? user.getUsername() : null;
     }
 }
