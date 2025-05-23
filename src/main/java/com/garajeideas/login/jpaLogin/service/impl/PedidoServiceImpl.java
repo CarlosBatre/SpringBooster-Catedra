@@ -140,4 +140,11 @@ public class PedidoServiceImpl implements PedidoService {
         return pedidoAssembler.toModel(actualizado);
     }
 
+    @Override
+    public void eliminarPedido(Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con ID: " + id));
+        pedidoRepository.delete(pedido);
+    }
+
 }
