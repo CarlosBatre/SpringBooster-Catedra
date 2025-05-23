@@ -92,4 +92,52 @@ public class PedidoServiceImpl implements PedidoService {
                 .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con ID: " + id));
         return pedidoAssembler.toModel(pedido);
     }
+    @Override
+    public PedidoResponse actualizarPedido(Long id, PedidoRequest request) {
+        Pedido pedidoExistente = pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con ID: " + id));
+
+        // Limpiar detalles antiguos
+        pedidoExistente.getDetalles().clear();
+        double total = 0;
+        List<DetallePedido> nuevosDetalles = new ArrayList<>();
+
+        for (PedidoRequest.ProductoPedido item : request.getProductos()) {
+            Producto producto = productoRepository.findById(item.getProductoId())
+                    .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + item.getProductoId()));
+
+            int cantidad = item.getCantidad();
+            if (producto.getExistencias() < cantidad) {
+                throw new IllegalArgumentException("No hay existencias suficientes para el producto: " + producto.getNombre());
+            }
+
+            DetallePedido detalle = DetallePedido.builder()
+                    .pedido(pedidoExistente)
+                    .producto(producto)
+                    .cantidad(cantidad)
+                    .imagen(producto.getImagen())
+                    .precioUnitario(producto.getPrecio())
+                    .build();
+
+            nuevosDetalles.add(detalle);
+            total += producto.getPrecio() * cantidad;
+        }
+
+        // Actualizar campos
+        pedidoExistente.setNombreCliente(request.getNombreCliente());
+        pedidoExistente.setDireccion(request.getDireccion());
+        pedidoExistente.setEmail(request.getEmail());
+        pedidoExistente.setTelefono(request.getTelefono());
+        pedidoExistente.setMetodoPago(request.getMetodoPago());
+        pedidoExistente.setDetalles(nuevosDetalles);
+        pedidoExistente.setTotal(total);
+
+        // Guardar cambios
+        Pedido actualizado = pedidoRepository.save(pedidoExistente);
+        productoRepository.saveAll(nuevosDetalles.stream().map(DetallePedido::getProducto).toList());
+
+        // Retornar usando el assembler
+        return pedidoAssembler.toModel(actualizado);
+    }
+
 }
