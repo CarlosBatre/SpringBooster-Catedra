@@ -108,3 +108,29 @@ export const logoutUser = async () => {
         delete axios.defaults.headers.common['Authorization'];
     }
 };
+
+// Obtener el perfil del usuario
+export const getUserProfile = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/api/users/profile`);
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        }
+        throw error;
+    }
+};
+
+// Actualizar el perfil del usuario
+export const updateUserProfile = async (updateData) => {
+    try {
+        const response = await axios.patch(`${API_URL}/api/users/profile`, updateData);
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.data) {
+            throw new Error(error.response.data);
+        }
+        throw error;
+    }
+};

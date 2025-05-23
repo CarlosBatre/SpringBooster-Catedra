@@ -157,7 +157,7 @@ const Dashboard = () => {
 
               {/* Carrito de compras */}
               <div className="relative">
-                <a href="#" className="text-white hover:text-gray-300 transition-colors">
+                <a href="/cart" className="text-white hover:text-gray-300 transition-colors">
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
                     fill="none" 
@@ -171,7 +171,8 @@ const Dashboard = () => {
                       strokeLinejoin="round" 
                       d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" 
                     />
-                  </svg>                  {/* Contador de items en el carrito */}
+                  </svg>
+                  {/* Contador de items en el carrito */}
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {cart.reduce((total, item) => total + item.quantity, 0)}
                   </span>
@@ -203,9 +204,9 @@ const Dashboard = () => {
                     aria-labelledby="user-menu-button"
                     tabIndex="-1"
                   >
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-1">Settings</a>
-                    <a href="#" className="block px-4 py-2 text-sm text-red-700" role="menuitem" tabIndex="-1" id="user-menu-item-2" onClick={handleLogout}>Cerrar sesión</a>
+                    <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabIndex="-1">Tu Perfil</a>
+                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabIndex="-1">Configuración</a>
+                    <a href="#" className="block px-4 py-2 text-sm text-red-700 hover:bg-gray-100" role="menuitem" tabIndex="-1" onClick={handleLogout}>Cerrar sesión</a>
                   </div>
                 )}
               </div>

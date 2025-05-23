@@ -4,6 +4,8 @@ import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import Dashboard from './components/pages/Dashboard';
 import Products from './components/pages/Products';
+import Profile from './components/pages/Profile';
+import Cart from './components/pages/Cart';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
@@ -12,6 +14,22 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route
+          path="/cart"
+          element={
+            <PrivateRoute>
+              <Cart />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/products"
           element={
