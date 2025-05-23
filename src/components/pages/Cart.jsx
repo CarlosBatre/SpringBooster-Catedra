@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { updateUserProfile, getUserProfile } from '../../services/api';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editableData, setEditableData] = useState({
+    username: '',
+    email: '',
+    address: ''
+  });
   const [checkoutData, setCheckoutData] = useState({
     nombreCliente: '',
     direccion: '',
@@ -18,48 +26,48 @@ const Cart = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Cargar datos del usuario desde el token
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        const tokenData = JSON.parse(jsonPayload);
-        setUserData({
-          email: tokenData.email,
-          username: tokenData.sub
-        });
-
-        // Pre-llenar los datos del checkout con la información del usuario
-        setCheckoutData(prev => ({
-          ...prev,
-          nombreCliente: tokenData.sub || '',
-          email: tokenData.email || ''
-        }));
-      } catch (error) {
-        console.error('Error decodificando el token:', error);
-      }
-    }
+    loadUserData();
   }, []);
 
-  // Aquí simulamos los items del carrito en el estado local
-  // Ya que no hay un endpoint específico para el carrito
-  const addToCart = (product) => {
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevItems, { ...product, quantity: 1 }];
-    });
+  const loadUserData = async () => {
+    try {
+      const data = await getUserProfile();
+      setUserData(data);
+      setEditableData({
+        username: data.username || '',
+        email: data.email || '',
+        address: data.address || ''
+      });
+      setCheckoutData(prev => ({
+        ...prev,
+        nombreCliente: data.username || '',
+        direccion: data.address || ''
+      }));
+    } catch (error) {
+      console.error('Error al cargar datos del usuario:', error);
+      setError('Error al cargar los datos del usuario');
+    }
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      setError('');
+      await updateUserProfile(editableData);
+      await loadUserData(); // Recargar los datos del usuario
+      setIsEditing(false);
+      setSuccess('Datos actualizados correctamente');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError('Error al actualizar los datos del usuario');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const calculateTotal = () => {
+    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
   const handleUpdateQuantity = (productId, newQuantity) => {
@@ -97,39 +105,15 @@ const Cart = () => {
       };
 
       await axios.post('http://localhost:8080/pedidos', orderData);
-      
-      // Limpiar el carrito
       setCartItems([]);
-      // Mostrar mensaje de éxito y redirigir
       alert('¡Pedido realizado con éxito!');
       navigate('/dashboard');
     } catch (err) {
-      console.error('Error al procesar el pedido:', err);
       setError('Error al procesar el pedido. Por favor, intente nuevamente.');
     } finally {
       setLoading(false);
     }
   };
-
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-100 pt-20">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-center">
-            <div className="w-full lg:w-2/3">
-              <div className="bg-white p-8 rounded-lg shadow-md">
-                Procesando...
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-100 pt-20">
@@ -139,16 +123,78 @@ const Cart = () => {
             {/* Resumen del usuario */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-4">
               <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-xl font-semibold mb-2">Resumen de tu carrito</h2>
-                  {userData && (
-                    <div className="space-y-1 text-gray-600">
-                      <p><span className="font-medium">Usuario:</span> {userData.username}</p>
-                      <p><span className="font-medium">Email:</span> {userData.email}</p>
+                <div className="w-full">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold">Datos del usuario</h2>
+                    <button
+                      onClick={() => setIsEditing(!isEditing)}
+                      className="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-md hover:bg-blue-50"
+                    >
+                      {isEditing ? 'Cancelar' : 'Editar datos'}
+                    </button>
+                  </div>
+
+                  {success && (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+                      {success}
+                    </div>
+                  )}
+
+                  {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+                      {error}
+                    </div>
+                  )}
+
+                  {isEditing ? (
+                    <form onSubmit={handleEditSubmit} className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+                        <input
+                          type="text"
+                          required
+                          value={editableData.username}
+                          onChange={(e) => setEditableData({...editableData, username: e.target.value})}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                        <input
+                          type="email"
+                          required
+                          value={editableData.email}
+                          onChange={(e) => setEditableData({...editableData, email: e.target.value})}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Dirección</label>
+                        <input
+                          type="text"
+                          required
+                          value={editableData.address}
+                          onChange={(e) => setEditableData({...editableData, address: e.target.value})}
+                          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300"
+                      >
+                        {loading ? 'Guardando...' : 'Guardar cambios'}
+                      </button>
+                    </form>
+                  ) : (
+                    <div className="space-y-2 text-gray-600">
+                      <p><span className="font-medium">Usuario:</span> {userData?.username}</p>
+                      <p><span className="font-medium">Email:</span> {userData?.email}</p>
+                      <p><span className="font-medium">Dirección:</span> {userData?.address || 'No especificada'}</p>
                     </div>
                   )}
                 </div>
-                <div className="text-right">
+                <div className="text-right ml-4">
                   <p className="text-lg font-medium">Total de productos: {cartItems.reduce((sum, item) => sum + item.quantity, 0)}</p>
                   <p className="text-2xl font-bold text-blue-600">${calculateTotal().toFixed(2)}</p>
                 </div>
@@ -158,12 +204,6 @@ const Cart = () => {
             {/* Contenido del carrito */}
             <div className="bg-white p-8 rounded-lg shadow-md">
               <h1 className="text-2xl font-bold mb-8">Tu Carrito</h1>
-              
-              {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                  {error}
-                </div>
-              )}
 
               {cartItems.length === 0 ? (
                 <div className="text-center py-8">
@@ -230,26 +270,6 @@ const Cart = () => {
                       </button>
                     ) : (
                       <form onSubmit={handleCheckout} className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">Nombre completo</label>
-                          <input
-                            type="text"
-                            required
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={checkoutData.nombreCliente}
-                            onChange={(e) => setCheckoutData({...checkoutData, nombreCliente: e.target.value})}
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">Dirección de envío</label>
-                          <input
-                            type="text"
-                            required
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={checkoutData.direccion}
-                            onChange={(e) => setCheckoutData({...checkoutData, direccion: e.target.value})}
-                          />
-                        </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">Teléfono</label>
                           <input

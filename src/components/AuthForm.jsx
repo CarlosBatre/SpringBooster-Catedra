@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthForm = ({ type, onSubmit }) => {
     const [formData, setFormData] = useState({
-        username: '',
         email: '',
         password: '',
+        username: '',
         address: ''
     });
     const [error, setError] = useState('');
@@ -16,7 +16,8 @@ const AuthForm = ({ type, onSubmit }) => {
             ...formData,
             [e.target.name]: e.target.value
         });
-    };    const handleSubmit = async (e) => {
+    };
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         try {
@@ -37,30 +38,32 @@ const AuthForm = ({ type, onSubmit }) => {
             {error && <p style={{ color: 'red' }}>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <div className="col-span-full">
-                    <label className="block mb-3 text-sm font-medium text-gray-600">Nombre de usuario:</label>
+                    <label className="block mb-3 text-sm font-medium text-gray-600">Email:</label>
                     <input
                         className="block w-full px-6 py-3 text-black bg-white border border-gray-200 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                        type="text"
-                        name="username"
-                        value={formData.username}
+                        type="email"
+                        name="email"
+                        value={formData.email}
                         onChange={handleChange}
                         required
                     />
                 </div>
+
                 {type === 'register' && (
                     <div className="col-span-full">
-                        <label className="block mb-3 text-sm font-medium text-gray-600">Email:</label>
+                        <label className="block mb-3 text-sm font-medium text-gray-600">Nombre de usuario:</label>
                         <input
                             className="block w-full px-6 py-3 text-black bg-white border border-gray-200 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
-                            type="email"
-                            name="email"
-                            value={formData.email}
+                            type="text"
+                            name="username"
+                            value={formData.username}
                             onChange={handleChange}
                             required
                         />
                     </div>
                 )}
-                <div  className="col-span-full">
+
+                <div className="col-span-full">
                     <label className="block mb-3 text-sm font-medium text-gray-600">Contraseña:</label>
                     <input
                         className="block w-full px-6 py-3 text-black bg-white border border-gray-200 rounded-full appearance-none placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
@@ -71,6 +74,7 @@ const AuthForm = ({ type, onSubmit }) => {
                         required
                     />
                 </div>
+
                 {type === 'register' && (
                     <div className="col-span-full">
                         <label className="block mb-3 text-sm font-medium text-gray-600">Dirección:</label>
