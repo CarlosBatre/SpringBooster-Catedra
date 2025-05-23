@@ -37,4 +37,11 @@ public class PedidoController {
     public PedidoResponse actualizarPedido(@PathVariable Long id, @Valid @RequestBody PedidoRequest request) {
         return pedidoService.actualizarPedido(id, request);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminarPedido(@PathVariable Long id) {
+        pedidoService.eliminarPedido(id);
+    }
+
 }
