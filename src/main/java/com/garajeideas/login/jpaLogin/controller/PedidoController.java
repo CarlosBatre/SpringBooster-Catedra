@@ -33,4 +33,8 @@ public class PedidoController {
     public PedidoResponse obtenerPedidoPorId(@PathVariable Long id) {
         return pedidoService.obtenerPedidoPorId(id);
     }
+    @PutMapping("/{id}")
+    public PedidoResponse actualizarPedido(@PathVariable Long id, @Valid @RequestBody PedidoRequest request) {
+        return pedidoService.actualizarPedido(id, request);
+    }
 }
