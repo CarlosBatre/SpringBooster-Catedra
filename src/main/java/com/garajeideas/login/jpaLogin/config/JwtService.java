@@ -17,7 +17,7 @@ import java.util.function.Function;
 public class JwtService {
 
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
-    
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -27,12 +27,10 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }    public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        if (userDetails instanceof org.springframework.security.core.userdetails.User) {
-            claims.put("email", userDetails.getUsername()); // Using username as email since that's what we store
-            claims.put("roles", userDetails.getAuthorities().stream()
-                    .map(a -> a.getAuthority())
-                    .toList());
-        }
+        claims.put("email", userDetails.getUsername()); // El username ahora es el email
+        claims.put("roles", userDetails.getAuthorities().stream()
+                .map(a -> a.getAuthority())
+                .toList());
         return generateToken(claims, userDetails);
     }
 
@@ -42,7 +40,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 60000)) // 1 minuto
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000)) // 1 hora
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

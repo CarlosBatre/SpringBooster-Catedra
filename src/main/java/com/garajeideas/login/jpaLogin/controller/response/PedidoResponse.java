@@ -12,31 +12,23 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PedidoResponse extends RepresentationModel<PedidoResponse> {
-
     private Long id;
     private String nombreCliente;
     private String direccion;
-    private String email;
     private String telefono;
     private String metodoPago;
     private String estado;
     private LocalDate fechaPedido;
     private Double total;
-
-    private List<DetallePedidoResponse> detalles;
+    private List<DetallePedidoDTO> detalles;
 
     @Getter
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    @Builder
-    public static class DetallePedidoResponse {
-
-        private Long id;
+    public static class DetallePedidoDTO {
         private Long productoId;
         private String nombreProducto;
-        private String imagen;
         private int cantidad;
-        private double precioUnitario;
     }
 }

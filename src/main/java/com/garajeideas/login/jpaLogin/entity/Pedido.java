@@ -18,24 +18,19 @@ public class Pedido {
     private Long id;
 
     private String nombreCliente;
+
     private String direccion;
-    private String email;
+
     private String telefono;
+
     private String metodoPago;
-    private String estado;
+
+    private String estado = "Pedido Realizado";
+
     private LocalDate fechaPedido;
+
     private Double total;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<DetallePedido> detalles;
-
-    @PrePersist
-    public void prePersist() {
-        if (estado == null) {
-            estado = "Pedido Realizado";
-        }
-        if (fechaPedido == null) {
-            fechaPedido = LocalDate.now();
-        }
-    }
 }

@@ -8,8 +8,5 @@ public interface PedidoService {
     PedidoResponse realizarPedido(PedidoRequest request);
     PagedModel<PedidoResponse> listarPedidos(Pageable pageable);
     PedidoResponse obtenerPedidoPorId(Long id);
-    PedidoResponse actualizarPedido(Long id, PedidoRequest request);
-    void eliminarPedido(Long id);
-
 
 }

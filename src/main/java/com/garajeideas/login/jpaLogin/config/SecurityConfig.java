@@ -50,17 +50,13 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/api/auth/authenticate").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/users").permitAll()
                         .requestMatchers("/productos/**").permitAll() //BORRAR LINEA DESPUES
                         .requestMatchers("/pedidos/**").permitAll() //BORRAR LINEA DESPUES
                         .requestMatchers("/v1/home").authenticated()
                         .requestMatchers("/v1/admin").hasAuthority("ADMIN")
-                        // Permitir acceso a Swagger UI
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/swagger-ui.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
