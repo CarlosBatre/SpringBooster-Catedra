@@ -34,7 +34,7 @@ public class ProductoRequest {
 
     @NotNull(message = "Las existencias es obligatoria")
     private int existencias;
-    
+
     @NotNull(message = "El precio es obligatorio")
     @Positive(message = "El precio debe ser un número positivo")
     private Double precio;
