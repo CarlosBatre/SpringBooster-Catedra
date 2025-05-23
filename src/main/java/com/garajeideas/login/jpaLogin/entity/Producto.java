@@ -45,6 +45,9 @@ public class Producto {
     private Presentacion presentacion;
 
     @Column(nullable = false)
+    private int existencias;
+
+    @Column(nullable = false)
     private Double precio;
 
     // Enum para presentaciones válidas
