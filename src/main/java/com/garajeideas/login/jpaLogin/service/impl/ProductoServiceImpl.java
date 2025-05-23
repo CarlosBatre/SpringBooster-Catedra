@@ -69,6 +69,7 @@ public class ProductoServiceImpl implements ProductoService {
         productoExistente.setPresentacion(
                 Producto.Presentacion.valueOf(productoRequest.getPresentacion().toUpperCase())
         );
+        productoExistente.setExistencias(productoRequest.getExistencias());
         productoExistente.setPrecio(productoRequest.getPrecio());
 
         productoRepository.save(productoExistente);
