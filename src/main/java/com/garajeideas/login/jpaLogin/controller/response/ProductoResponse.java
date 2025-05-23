@@ -22,5 +22,6 @@ public class ProductoResponse extends RepresentationModel<ProductoResponse> {
     private String ingredientes;
     private String beneficios;
     private String presentacion;
+    private int cantidad;
     private Double precio;
 }
