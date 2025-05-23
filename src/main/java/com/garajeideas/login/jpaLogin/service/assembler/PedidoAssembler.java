@@ -10,9 +10,7 @@ import lombok.NonNull;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Component
 public class PedidoAssembler extends RepresentationModelAssemblerSupport<Pedido, PedidoResponse> {
@@ -24,13 +22,11 @@ public class PedidoAssembler extends RepresentationModelAssemblerSupport<Pedido,
         super(PedidoController.class, PedidoResponse.class);
         this.pedidoMapper = pedidoMapper;
     }
+
     @Override
     public PedidoResponse toModel(Pedido pedido) {
-        return Optional.ofNullable(pedido)
-                .map(value -> {
-                    PedidoResponse model = pedidoMapper.toResponse(value);
-                    model.add(linkTo(getControllerClass()).slash(model.getId()).withSelfRel());
-                    return model;
-                }).orElse(null);
+        PedidoResponse model = pedidoMapper.toPedidoResponse(pedido);
+        model.add(linkTo(methodOn(PedidoController.class).obtenerPedidoPorId(pedido.getId())).withSelfRel());
+        return model;
     }
 }
