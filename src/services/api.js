@@ -55,7 +55,7 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
     try {
         console.log('Intentando login con:', credentials);
-        const response = await axios.post('/api/auth/authenticate', {
+        const response = await axios.post('/api/auth/login', {
             email: credentials.email,
             password: credentials.password
         });
