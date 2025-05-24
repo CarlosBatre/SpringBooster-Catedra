@@ -10,6 +10,6 @@ public interface PedidoService {
     PedidoResponse obtenerPedidoPorId(Long id);
     PedidoResponse actualizarPedido(Long id, PedidoRequest request);
     void eliminarPedido(Long id);
-
+    PedidoResponse actualizarEstado(Long id, String estado);
 
 }
