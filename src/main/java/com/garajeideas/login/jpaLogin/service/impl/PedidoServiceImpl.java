@@ -146,5 +146,15 @@ public class PedidoServiceImpl implements PedidoService {
                 .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con ID: " + id));
         pedidoRepository.delete(pedido);
     }
+    @Override
+    @Transactional
+    public PedidoResponse actualizarEstado(Long id, String estado) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado con ID: " + id));
+
+        pedido.setEstado(estado);
+        Pedido actualizado = pedidoRepository.save(pedido);
+        return pedidoAssembler.toModel(actualizado);
+    }
 
 }
