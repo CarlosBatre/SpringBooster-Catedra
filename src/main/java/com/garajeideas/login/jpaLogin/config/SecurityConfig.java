@@ -52,7 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/users").permitAll()
+                        .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/productos/**").permitAll() //BORRAR LINEA DESPUES
                         .requestMatchers("/pedidos/**").permitAll() //BORRAR LINEA DESPUES
                         .requestMatchers("/v1/home").authenticated()
