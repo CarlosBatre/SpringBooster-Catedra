@@ -1,5 +1,6 @@
 package com.garajeideas.login.jpaLogin.controller;
 
+import com.garajeideas.login.jpaLogin.controller.request.ActualizarEstadoRequest;
 import com.garajeideas.login.jpaLogin.controller.request.PedidoRequest;
 import com.garajeideas.login.jpaLogin.controller.response.PedidoResponse;
 import com.garajeideas.login.jpaLogin.service.PedidoService;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,6 +44,15 @@ public class PedidoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminarPedido(@PathVariable Long id) {
         pedidoService.eliminarPedido(id);
+    }
+
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<PedidoResponse> actualizarEstado(
+            @PathVariable Long id,
+            @RequestBody ActualizarEstadoRequest request) {
+
+        PedidoResponse actualizado = pedidoService.actualizarEstado(id, request.getEstado());
+        return ResponseEntity.ok(actualizado);
     }
 
 }
