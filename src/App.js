@@ -15,6 +15,7 @@ import GestionUsuariosAdmin from './components/pages/GestionUsuariosAdmin';
 import GestionPedidosAdmin from './components/pages/GestionPedidosAdmin';
 import DetallePedidoAdmin from './components/pages/DetallePedidoAdmin';
 import RoleProtectedRoute from './components/RoleProtecteRoute';
+import GestionPedidosCliente from './components/pages/GestionPedidosCliente';
 function App() {
   return (
     <Router>
