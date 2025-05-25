@@ -52,5 +52,4 @@ const styles = {
     transition: 'background 0.3s ease',
   },
 };
-
 export default HeaderAdmin;
