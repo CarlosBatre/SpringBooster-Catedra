@@ -11,31 +11,43 @@ const Login = () => {
     try {
       setError('');
       const response = await loginUser(credentials);
+      
       if (response && response.token) {
         localStorage.setItem('token', response.token);
-        // Decodificar el token para obtener la información del usuario
-        try {
-          const base64Url = response.token.split('.')[1];
-          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join(''));
 
-          const userData = JSON.parse(jsonPayload);
-          localStorage.setItem('user', JSON.stringify({
-            email: userData.email
-          }));
-        } catch (error) {
-          console.error('Error decodificando el token:', error);
+        // Decodificar el token y obtener el campo "role"
+        const base64Url = response.token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        ).join(''));
+
+        const userData = JSON.parse(jsonPayload);
+
+        // Guardar datos opcionales del usuario
+        localStorage.setItem('user', JSON.stringify({
+          email: userData.email,
+          role: userData.role
+        }));
+
+        // Redirigir según el rol
+        switch (userData.role) {
+          case 'ADMIN':
+          case 'EMPLEADO':
+            navigate('/admin/dashboard');
+            break;
+          case 'USER':
+          default:
+            navigate('/dashboard');
+            break;
         }
-        navigate('/dashboard');
+
       } else {
         setError('Error: Respuesta inválida del servidor');
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('Error durante el login:', error);
       setError(error.message || 'Error al iniciar sesión');
-      throw error;
     }
   };
 
