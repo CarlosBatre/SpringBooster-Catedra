@@ -13,6 +13,7 @@ import EditarProducto from './components/pages/EditarProducto';
 import GestionUsuariosAdmin from './components/pages/GestionUsuariosAdmin';
 import GestionPedidosAdmin from './components/pages/GestionPedidosAdmin';
 import DetallePedidoAdmin from './components/pages/DetallePedidoAdmin';
+import RoleProtectedRoute from './components/RoleProtecteRoute';
 function App() {
   return (
     <Router>
@@ -51,12 +52,42 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/admin/dashboard" element={ <DashboardAdmin /> } />
-        <Route path="/admin/dashboard/crear-producto" element={<CrearProducto />} />
-        <Route path="/admin/dashboard/editar-producto/:id" element={<EditarProducto />} />
-        <Route path="/admin/dashboard/gestion-usuarios" element={<GestionUsuariosAdmin />} />
-        <Route path="/admin/dashboard/gestion-pedidos" element={<GestionPedidosAdmin />} />
-        <Route path="/admin/dashboard/pedidos/:id" element={<DetallePedidoAdmin />} />
+
+        <Route path="/admin/dashboard" element={
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+            <DashboardAdmin />
+          </RoleProtectedRoute>
+        } />
+
+        <Route path="/admin/dashboard/crear-producto" element={
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+            <CrearProducto />
+          </RoleProtectedRoute>
+        } />
+
+        <Route path="/admin/dashboard/editar-producto/:id" element={
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+            <EditarProducto />
+          </RoleProtectedRoute>
+        } />
+
+        <Route path="/admin/dashboard/gestion-usuarios" element={
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+            <GestionUsuariosAdmin />
+          </RoleProtectedRoute>
+        } />
+
+        <Route path="/admin/dashboard/gestion-pedidos" element={
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+            <GestionPedidosAdmin />
+          </RoleProtectedRoute>
+        } />
+
+        <Route path="/admin/dashboard/pedidos/:id" element={
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+            <DetallePedidoAdmin />
+          </RoleProtectedRoute>
+        } />
        
         <Route path="/" element={<Login />} />
       </Routes>
