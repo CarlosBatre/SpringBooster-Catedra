@@ -62,6 +62,15 @@ function App() {
           }
         />
 
+          <Route
+          path="/mis-pedidos"
+          element={
+            <PrivateRoute>
+              <GestionPedidosCliente />
+            </PrivateRoute>
+          }
+        />
+
         <Route path="/admin/dashboard" element={
           <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
             <DashboardAdmin />
