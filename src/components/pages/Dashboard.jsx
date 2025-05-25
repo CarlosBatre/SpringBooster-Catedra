@@ -8,7 +8,10 @@ const Dashboard = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [notification, setNotification] = useState({ show: false, message: '' });
 
   {/* Función para cerrar sesión y redirigir al login */ }
@@ -84,11 +87,9 @@ const Dashboard = () => {
 
   const handleAddToCart = (product) => {
     setCart(prevCart => {
-      // Buscar si el producto ya existe en el carrito
       const existingProduct = prevCart.find(item => item.id === product.id);
       if (existingProduct) {
         showNotification(`Se agregó otra unidad de ${product.name} al carrito`);
-        // Si existe, incrementar la cantidad
         return prevCart.map(item =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
@@ -96,10 +97,21 @@ const Dashboard = () => {
         );
       }
       showNotification(`${product.name} fue agregado al carrito`);
-      // Si no existe, agregar el producto con cantidad 1
-      return [...prevCart, { ...product, quantity: 1 }];
+      return [...prevCart, {
+        id: product.id,
+        name: product.name,
+        price: parseFloat(product.price),
+        quantity: 1,
+        imageUrl: product.imageUrl || null
+      }];
     });
   };
+
+  // Guardar carrito en localStorage cuando cambie
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Notificación */}
@@ -109,7 +121,7 @@ const Dashboard = () => {
         </div>
       )}
       {/* Barra de navegación principal */}
-      <nav className="bg-gray-800">
+      <nav className="bg-green-800">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             {/* Botón del menú móvil */}
@@ -141,18 +153,21 @@ const Dashboard = () => {
               <div className="flex shrink-0 items-center">
                 <img className="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" />
               </div>
-              <div className="hidden sm:ml-6 sm:block">              <div className="flex space-x-4">
+              <div className="hidden sm:ml-6 sm:block">                <div className="flex space-x-4">
                   <a href="/dashboard" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white" aria-current="page">Dashboard</a>
                   <a href="/products" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Productos</a>
+                  <a href="/create-order" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Pedidos</a>
                 </div>
               </div>
             </div>
 
-            {/* Sección de usuario y menú desplegable */}
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            {/* Sección de usuario y menú desplegable */}            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               {/* Nombre del usuario */}
-              <p className='text-white text-sm sm:text-base font-medium mr-4 hidden sm:block'>
-                Hola, {user?.username}
+              <p className='text-white text-sm sm:text-base font-medium mr-4 flex items-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                </svg>
+                {user?.username}
               </p>
 
               {/* Carrito de compras */}
@@ -216,12 +231,10 @@ const Dashboard = () => {
 
         {/* Menú móvil */}
         {isMobileMenuOpen && (
-          <div className="sm:hidden" id="mobile-menu">
-            <div className="space-y-1 px-2 pt-2 pb-3">
-              <a href="#" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a>
-              <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Team</a>
-              <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
-              <a href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
+          <div className="sm:hidden" id="mobile-menu">            <div className="space-y-1 px-2 pt-2 pb-3">
+              <a href="/dashboard" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white" aria-current="page">Dashboard</a>
+              <a href="/products" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Productos</a>
+              <a href="/create-order" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Pedidos</a>
             </div>
           </div>
         )}

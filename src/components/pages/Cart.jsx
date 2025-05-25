@@ -4,7 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { updateUserProfile, getUserProfile } from '../../services/api';
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -24,6 +27,11 @@ const Cart = () => {
     estado: 'Pedido Realizado'
   });
   const navigate = useNavigate();
+
+  // Actualizar el localStorage cuando el carrito cambie
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   useEffect(() => {
     loadUserData();
@@ -68,6 +76,70 @@ const Cart = () => {
 
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };  const handleCheckout = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      // Validar que todos los campos requeridos estén presentes
+      if (!userData?.username || !userData?.address || !checkoutData.telefono) {
+        throw new Error('Por favor complete todos los campos requeridos');
+      }
+
+      // Crear el pedido con el formato especificado
+      const orderData = {
+        id: null,
+        nombreCliente: userData.username,
+        direccion: userData.address,
+        email: userData.email || '',
+        telefono: checkoutData.telefono,
+        metodoPago: checkoutData.metodoPago,
+        estado: "PEDIDO EN CAMINO",
+        fechaPedido: new Date().toISOString().split('T')[0],
+        total: parseFloat(calculateTotal().toFixed(2)),
+        detalles: cartItems.map((item, index) => ({
+          id: index + 1,
+          productoId: parseInt(item.id, 10),
+          nombreProducto: item.name,
+          imagen: item.imageUrl || null,
+          cantidad: parseInt(item.quantity, 10),
+          precioUnitario: parseFloat(item.price.toFixed(2))
+        })),
+        _links: {
+          self: {
+            href: `http://localhost:8080/pedidos/${null}` // El ID será actualizado después de la creación
+          }
+        }
+      };// Hacer el POST al endpoint
+      const response = await axios.post('http://localhost:8080/pedidos', orderData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+        // Actualizar el ID del pedido y el link con la respuesta del servidor
+      const newOrderId = response.data.id;
+      orderData.id = newOrderId;
+      orderData._links.self.href = `http://localhost:8080/pedidos/${newOrderId}`;
+
+      if (response.status === 201 || response.status === 200) {
+        // Guardar el pedido en localStorage para referencia
+        localStorage.setItem(`order_${newOrderId}`, JSON.stringify(orderData));
+        setCartItems([]);
+        localStorage.removeItem('cart');
+        setSuccess(`¡Pedido #${newOrderId} realizado con éxito!`);
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 2000);
+      }
+    } catch (err) {
+      console.error('Error al procesar el pedido:', err);
+      setError('Error al procesar el pedido. Por favor, intente nuevamente.');
+      if (err.response?.data) {
+        console.error('Detalle del error:', err.response.data);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleUpdateQuantity = (productId, newQuantity) => {
@@ -87,32 +159,6 @@ const Cart = () => {
 
   const handleRemoveItem = (productId) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
-  };
-
-  const handleCheckout = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const orderData = {
-        ...checkoutData,
-        fechaPedido: new Date().toISOString().split('T')[0],
-        total: calculateTotal(),
-        detalles: cartItems.map(item => ({
-          productoId: item.id,
-          nombreProducto: item.name,
-          cantidad: item.quantity
-        }))
-      };
-
-      await axios.post('http://localhost:8080/pedidos', orderData);
-      setCartItems([]);
-      alert('¡Pedido realizado con éxito!');
-      navigate('/dashboard');
-    } catch (err) {
-      setError('Error al procesar el pedido. Por favor, intente nuevamente.');
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -243,12 +289,14 @@ const Cart = () => {
                             >
                               +
                             </button>
-                          </div>
-                          <button
+                          </div>                          <button
                             onClick={() => handleRemoveItem(item.id)}
-                            className="text-red-600 hover:text-red-800"
+                            className="flex items-center space-x-1 bg-red-500 text-red-600 hover:bg-red-800 px-3 py-1 rounded-md transition-colors"
                           >
-                            Eliminar
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            <span>Eliminar</span>
                           </button>
                         </div>
                       </div>
@@ -265,8 +313,9 @@ const Cart = () => {
                       <button
                         onClick={() => setIsCheckingOut(true)}
                         className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                        disabled={cartItems.length === 0}
                       >
-                        Proceder al pago
+                        {cartItems.length === 0 ? 'Carrito vacío' : 'Proceder al pago'}
                       </button>
                     ) : (
                       <form onSubmit={handleCheckout} className="space-y-4">
@@ -275,6 +324,8 @@ const Cart = () => {
                           <input
                             type="tel"
                             required
+                            pattern="[0-9]{8}"
+                            placeholder="Ejemplo: 77445566"
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                             value={checkoutData.telefono}
                             onChange={(e) => setCheckoutData({...checkoutData, telefono: e.target.value})}
@@ -293,6 +344,15 @@ const Cart = () => {
                             <option value="Efectivo">Efectivo</option>
                           </select>
                         </div>
+
+                        <div className="mt-4 p-4 bg-gray-50 rounded-md">
+                          <h4 className="font-medium mb-2">Resumen del pedido</h4>
+                          <p><strong>Cliente:</strong> {userData?.username}</p>
+                          <p><strong>Dirección de entrega:</strong> {userData?.address}</p>
+                          <p><strong>Email:</strong> {userData?.email}</p>
+                          <p><strong>Total a pagar:</strong> ${calculateTotal().toFixed(2)}</p>
+                        </div>
+
                         <div className="flex space-x-4">
                           <button
                             type="submit"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { getUserProfile, updateUserProfile } from '../../services/api';
 
 const Profile = () => {
   const [userData, setUserData] = useState({
@@ -7,69 +7,48 @@ const Profile = () => {
     email: '',
     address: '',
   });
-  const [isEditing, setIsEditing] = useState({
-    username: false,
-    email: false,
-    address: false,
-  });
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    // Cargar datos del usuario al montar el componente
-    const loadUserData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8080/api/users/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUserData(response.data);
-      } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
-        setError('Error al cargar los datos del usuario');
-      }
-    };
-
     loadUserData();
   }, []);
 
-  const handleEdit = (field) => {
-    setIsEditing((prev) => ({
-      ...prev,
-      [field]: true,
-    }));
+  const loadUserData = async () => {
+    try {
+      const data = await getUserProfile();
+      setUserData({
+        username: data.username || '',
+        email: data.email || '',
+        address: data.address || ''
+      });
+    } catch (error) {
+      console.error('Error al cargar datos del usuario:', error);
+      setError('Error al cargar los datos del usuario');
+    }
   };
 
-  const handleSave = async (field) => {
-    try {
-      const token = localStorage.getItem('token');
-      await axios.patch(
-        'http://localhost:8080/api/users/profile',
-        { [field]: userData[field] },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
 
-      setIsEditing((prev) => ({
-        ...prev,
-        [field]: false,
-      }));
-      setSuccess(`${field} actualizado correctamente`);
+  const handleSave = async () => {
+    try {
+      await updateUserProfile(userData);
+      setIsEditing(false);
+      setSuccess('Datos actualizados correctamente');
       setTimeout(() => setSuccess(''), 3000);
+      await loadUserData(); // Recargar los datos después de actualizar
     } catch (error) {
-      console.error(`Error al actualizar ${field}:`, error);
-      setError(`Error al actualizar ${field}`);
+      console.error('Error al actualizar los datos:', error);
+      setError(error.message || 'Error al actualizar los datos');
       setTimeout(() => setError(''), 3000);
     }
   };
 
   const handleChange = (field, value) => {
-    setUserData((prev) => ({
+    setUserData(prev => ({
       ...prev,
       [field]: value,
     }));
@@ -97,103 +76,61 @@ const Profile = () => {
 
         <div className="border-t border-gray-200">
           <dl>
-            {/* Username */}
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Nombre de usuario</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex justify-between items-center">
-                {isEditing.username ? (
-                  <>
-                    <input
-                      type="text"
-                      value={userData.username}
-                      onChange={(e) => handleChange('username', e.target.value)}
-                      className="flex-1 px-3 py-2 border rounded-md mr-2"
-                    />
-                    <button
-                      onClick={() => handleSave('username')}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                    >
-                      Guardar
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span>{userData.username}</span>
-                    <button
-                      onClick={() => handleEdit('username')}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      Editar
-                    </button>
-                  </>
-                )}
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <input
+                  type="text"
+                  value={userData.username}
+                  onChange={(e) => handleChange('username', e.target.value)}
+                  disabled={!isEditing}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
               </dd>
             </div>
 
-            {/* Email */}
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Email</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex justify-between items-center">
-                {isEditing.email ? (
-                  <>
-                    <input
-                      type="email"
-                      value={userData.email}
-                      onChange={(e) => handleChange('email', e.target.value)}
-                      className="flex-1 px-3 py-2 border rounded-md mr-2"
-                    />
-                    <button
-                      onClick={() => handleSave('email')}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                    >
-                      Guardar
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span>{userData.email}</span>
-                    <button
-                      onClick={() => handleEdit('email')}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      Editar
-                    </button>
-                  </>
-                )}
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <input
+                  type="email"
+                  value={userData.email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  disabled={!isEditing}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
               </dd>
             </div>
 
-            {/* Address */}
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Dirección</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex justify-between items-center">
-                {isEditing.address ? (
-                  <>
-                    <input
-                      type="text"
-                      value={userData.address}
-                      onChange={(e) => handleChange('address', e.target.value)}
-                      className="flex-1 px-3 py-2 border rounded-md mr-2"
-                    />
-                    <button
-                      onClick={() => handleSave('address')}
-                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                    >
-                      Guardar
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <span>{userData.address}</span>
-                    <button
-                      onClick={() => handleEdit('address')}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      Editar
-                    </button>
-                  </>
-                )}
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                <input
+                  type="text"
+                  value={userData.address || ''}
+                  onChange={(e) => handleChange('address', e.target.value)}
+                  disabled={!isEditing}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
               </dd>
+            </div>
+
+            <div className="bg-white px-4 py-5 sm:px-6">
+              {!isEditing ? (
+                <button
+                  onClick={handleEdit}
+                  className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  Editar Perfil
+                </button>
+              ) : (
+                <button
+                  onClick={handleSave}
+                  className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                >
+                  Guardar Cambios
+                </button>
+              )}
             </div>
           </dl>
         </div>
