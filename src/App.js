@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute';
 import DashboardAdmin from './components/pages/DashboardAdmin';
 import CrearProducto from './components/pages/CrearProducto';
 import EditarProducto from './components/pages/EditarProducto';
+import OrderForm from './components/pages/OrderForm';
 import GestionUsuariosAdmin from './components/pages/GestionUsuariosAdmin';
 import GestionPedidosAdmin from './components/pages/GestionPedidosAdmin';
 import DetallePedidoAdmin from './components/pages/DetallePedidoAdmin';
@@ -49,6 +50,14 @@ function App() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+           <Route
+          path="/create-order"
+          element={
+            <PrivateRoute>
+              <OrderForm />
             </PrivateRoute>
           }
         />
