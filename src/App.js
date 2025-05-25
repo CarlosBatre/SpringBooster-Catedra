@@ -51,6 +51,13 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/admin/dashboard" element={ <DashboardAdmin /> } />
+        <Route path="/admin/dashboard/crear-producto" element={<CrearProducto />} />
+        <Route path="/admin/dashboard/editar-producto/:id" element={<EditarProducto />} />
+        <Route path="/admin/dashboard/gestion-usuarios" element={<GestionUsuariosAdmin />} />
+        <Route path="/admin/dashboard/gestion-pedidos" element={<GestionPedidosAdmin />} />
+        <Route path="/admin/dashboard/pedidos/:id" element={<DetallePedidoAdmin />} />
+       
         <Route path="/" element={<Login />} />
       </Routes>
     </Router>
