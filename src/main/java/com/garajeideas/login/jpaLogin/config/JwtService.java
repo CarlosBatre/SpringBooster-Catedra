@@ -31,6 +31,10 @@ public class JwtService {
         claims.put("roles", userDetails.getAuthorities().stream()
                 .map(a -> a.getAuthority())
                 .toList());
+        claims.put("role", userDetails.getAuthorities().stream()
+                .map(a -> a.getAuthority())
+                .findFirst()
+                .orElse("USER")); // rol principal
         return generateToken(claims, userDetails);
     }
 
