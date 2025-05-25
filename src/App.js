@@ -7,7 +7,12 @@ import Products from './components/pages/Products';
 import Profile from './components/pages/Profile';
 import Cart from './components/pages/Cart';
 import PrivateRoute from './components/PrivateRoute';
-
+import DashboardAdmin from './components/pages/DashboardAdmin';
+import CrearProducto from './components/pages/CrearProducto';
+import EditarProducto from './components/pages/EditarProducto';
+import GestionUsuariosAdmin from './components/pages/GestionUsuariosAdmin';
+import GestionPedidosAdmin from './components/pages/GestionPedidosAdmin';
+import DetallePedidoAdmin from './components/pages/DetallePedidoAdmin';
 function App() {
   return (
     <Router>
