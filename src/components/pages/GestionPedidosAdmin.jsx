@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import img from '../../img/logo_umbrella.png';
 
 const GestionPedidosAdmin = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -56,9 +57,18 @@ const GestionPedidosAdmin = () => {
 
   return (
     <div style={styles.container}>
-      <header style={styles.header}>
-        <h2 style={styles.headerText}>Admin Dashboard</h2>
-      </header>
+<header style={styles.header}>
+  <div style={styles.headerContent}>
+    <img
+      src={img}
+      alt="Logo"
+      style={styles.logo}
+      onClick={() => navigate('/admin/dashboard')}
+    />
+    <h2 style={styles.headerText}>Admin Dashboard</h2>
+  </div>
+</header>
+
 
       <div style={styles.mainContent}>
         <h2 style={styles.titulo}>Gestión de Pedidos</h2>
@@ -221,6 +231,19 @@ const styles = {
     fontWeight: 'bold',
     width: '8%',
   },
+  headerContent: {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'relative',
+},
+logo: {
+  height: '50px',
+  position: 'absolute',
+  left: '1rem',
+  cursor: 'pointer',
+},
+
 };
 
 export default GestionPedidosAdmin;
