@@ -91,19 +91,19 @@ function App() {
         } />
 
         <Route path="/admin/dashboard/gestion-usuarios" element={
-          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+          <RoleProtectedRoute allowedRoles={['ADMIN']}>
             <GestionUsuariosAdmin />
           </RoleProtectedRoute>
         } />
 
         <Route path="/admin/dashboard/gestion-pedidos" element={
-          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO', 'DELIVERY']}>
             <GestionPedidosAdmin />
           </RoleProtectedRoute>
         } />
 
         <Route path="/admin/dashboard/pedidos/:id" element={
-          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']}>
+          <RoleProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO', 'DELIVERY']}>
             <DetallePedidoAdmin />
           </RoleProtectedRoute>
         } />
