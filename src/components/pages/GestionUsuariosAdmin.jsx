@@ -135,6 +135,24 @@ const handleEliminarUsuario = async (id) => {
                 </div>
               ))}
             </div>
+
+            <div style={styles.rolContainer}>
+  <h3 style={styles.rolTitulo}>Usuarios con rol DELIVERY</h3>
+  {usuariosFiltrados.filter((u) => u.role === 'DELIVERY').map((user) => (
+    <div key={user.id} style={styles.usuarioCard}>
+      <div>
+        <strong>{user.username}</strong>
+        <p>{user.email}</p>
+      </div>
+      <button
+        style={styles.botonEliminar}
+        onClick={() => handleEliminarUsuario(user.id)}
+      >
+        Eliminar
+      </button>
+    </div>
+  ))}
+</div>
           </div>
         )}
       </main>
