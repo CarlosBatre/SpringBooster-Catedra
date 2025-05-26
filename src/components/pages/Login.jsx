@@ -30,16 +30,20 @@ const Login = () => {
           role: userData.role
         }));
 
-        switch (userData.role) {
-          case 'ADMIN':
-          case 'EMPLEADO':
-            navigate('/admin/dashboard');
-            break;
-          case 'USER':
-          default:
-            navigate('/dashboard');
-            break;
-        }
+switch (userData.role) {
+  case 'ADMIN':
+  case 'EMPLEADO':
+    navigate('/admin/dashboard');
+    break;
+  case 'DELIVERY':
+    navigate('/admin/dashboard/gestion-pedidos'); // ✅ Redirección específica para DELIVERY
+    break;
+  case 'USER':
+  default:
+    navigate('/dashboard');
+    break;
+}
+
       } else {
         setError('Error: Respuesta inválida del servidor');
       }
