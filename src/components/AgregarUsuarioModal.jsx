@@ -74,6 +74,7 @@ const AgregarUsuarioModal = ({ onClose, onUsuarioAgregado }) => {
         >
           <option value="USER">USER</option>
           <option value="EMPLEADO">EMPLEADO</option>
+          <option value="DELIVERY">DELIVERY</option>
         </select>
 
         <div style={modalStyles.botones}>
