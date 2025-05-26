@@ -119,8 +119,7 @@ const Dashboard = () => {
               <img className="h-10" src={logo} alt="Logo Umbrella" />
               <div className="hidden sm:flex space-x-4">
                 <a href="/dashboard" className="text-white font-medium hover:text-gray-300">Dashboard</a>
-                <a href="/products" className="text-white font-medium hover:text-gray-300">Productos</a>
-                <a href="/create-order" className="text-white font-medium hover:text-gray-300">Pedidos</a>
+                <a href="/create-order" className="text-white font-medium hover:text-gray-300">Realizar Pedidos</a>
                 <a href="/mis-pedidos" className="text-white font-medium hover:text-gray-300">Mis Pedidos</a>
               </div>
             </div>
