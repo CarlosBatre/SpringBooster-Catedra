@@ -83,20 +83,21 @@ const OrderForm = () => {
   return (
     <div className="min-h-screen bg-green-50 pb-12">
       {/* Header farmacéutico */}
-<header className="bg-green-700 text-white py-4 px-6 flex items-center justify-between shadow-md">
-  <div
-    className="flex items-center cursor-pointer"
-    onClick={() => navigate('/dashboard')}
-  >
-    <img
-      src={img}
-      alt="Farmacia Natural Logo"
-      className="h-10 w-auto mr-3"
-    />
-    <span className="text-xl font-bold">Farmacia Natural</span>
-  </div>
-</header>
+      <header className="bg-green-700 text-white py-4 px-6 flex items-center justify-between shadow-md">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={() => navigate('/dashboard')}
+        >
+<img
+  src={img}
+  alt="Farmacia Natural Logo"
+  className="h-10 w-auto mr-3"
+/>
 
+
+          <span className="text-xl font-bold">Farmacia Natural</span>
+        </div>
+      </header>
 
       <main className="max-w-3xl mx-auto mt-8 bg-white rounded-lg shadow-md p-6">
         <h1 className="text-3xl font-bold text-center text-green-800 mb-8">Realizar Pedido</h1>
