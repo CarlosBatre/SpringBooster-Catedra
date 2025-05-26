@@ -8,18 +8,21 @@ const Register = () => {
 
   const handleRegister = async (userData) => {
     try {
-      const user = await registerUser(userData);
-      // Redirigir al login después de un registro exitoso
-      navigate('/login');
+      await registerUser(userData);
+      navigate('/login'); // Redirige después del registro exitoso
     } catch (error) {
       throw error;
     }
   };
 
   return (
-    <div>
-      <h1>Crear nueva cuenta</h1>
-      <AuthForm type="register" onSubmit={handleRegister} />
+    <div className="min-h-screen bg-[#eafaf2] flex items-center justify-center px-4">
+      <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-8 border border-gray-200">
+        <h1 className="text-2xl font-bold text-center mb-6 text-[#1f8663]">
+          Crear Nueva Cuenta
+        </h1>
+        <AuthForm type="register" onSubmit={handleRegister} />
+      </div>
     </div>
   );
 };
