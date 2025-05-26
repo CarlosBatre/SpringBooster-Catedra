@@ -75,48 +75,67 @@ const DashboardAdmin = () => {
 <br/><br/>
         <div style={styles.filtrosContainer}>
           <h2 style={styles.subtitulo}>Productos en inventario</h2>
-          <div style={styles.filtros}>
-            <input
-              type="text"
-              name="nombre"
-              placeholder="Buscar por nombre"
-              value={filtros.nombre}
-              onChange={handleFiltroChange}
-              style={styles.input}
-            />
-            <input
-              type="text"
-              name="presentacion"
-              placeholder="Presentación"
-              value={filtros.presentacion}
-              onChange={handleFiltroChange}
-              style={styles.input}
-            />
-            <input
-              type="text"
-              name="ingredientes"
-              placeholder="Ingredientes"
-              value={filtros.ingredientes}
-              onChange={handleFiltroChange}
-              style={styles.input}
-            />
-            <input
-              type="number"
-              name="precioMax"
-              placeholder="Precio máximo"
-              value={filtros.precioMax}
-              onChange={handleFiltroChange}
-              style={styles.input}
-            />
-            <input
-              type="number"
-              name="existenciasMin"
-              placeholder="Existencias mínimas"
-              value={filtros.existenciasMin}
-              onChange={handleFiltroChange}
-              style={styles.input}
-            />
-          </div>
+          <div style={styles.filtrosContainer}>
+  <h2 style={styles.subtitulo}>Filtrar productos</h2>
+  <div style={styles.filtroGrid}>
+    <div style={styles.filtroItem}>
+      <label style={styles.label}>Nombre</label>
+      <input
+        type="text"
+        name="nombre"
+        placeholder="Buscar por nombre"
+        value={filtros.nombre}
+        onChange={handleFiltroChange}
+        style={styles.input}
+      />
+    </div>
+    <div style={styles.filtroItem}>
+      <label style={styles.label}>Presentación</label>
+      <input
+        type="text"
+        name="presentacion"
+        placeholder="Ej: cápsulas"
+        value={filtros.presentacion}
+        onChange={handleFiltroChange}
+        style={styles.input}
+      />
+    </div>
+    <div style={styles.filtroItem}>
+      <label style={styles.label}>Ingredientes</label>
+      <input
+        type="text"
+        name="ingredientes"
+        placeholder="Ej: jengibre, cúrcuma"
+        value={filtros.ingredientes}
+        onChange={handleFiltroChange}
+        style={styles.input}
+      />
+    </div>
+    <div style={styles.filtroItem}>
+      <label style={styles.label}>Precio máximo</label>
+      <input
+        type="number"
+        name="precioMax"
+        placeholder="Ej: 50"
+        value={filtros.precioMax}
+        onChange={handleFiltroChange}
+        style={styles.input}
+      />
+    </div>
+    <div style={styles.filtroItem}>
+      <label style={styles.label}>Existencias mínimas</label>
+      <input
+        type="number"
+        name="existenciasMin"
+        placeholder="Ej: 10"
+        value={filtros.existenciasMin}
+        onChange={handleFiltroChange}
+        style={styles.input}
+      />
+    </div>
+  </div>
+</div>
+
         </div>
 
         {loading ? (
@@ -217,6 +236,26 @@ const styles = {
     textAlign: 'center',
     marginTop: '2rem',
   },
+  filtroGrid: {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: '1rem',
+  marginTop: '1rem',
+},
+
+filtroItem: {
+  display: 'flex',
+  flexDirection: 'column',
+  minWidth: '200px',
+  flex: '1 1 200px',
+},
+
+label: {
+  marginBottom: '0.3rem',
+  color: '#1f8663',
+  fontWeight: 'bold',
+},
+
 };
 
 export default DashboardAdmin;
