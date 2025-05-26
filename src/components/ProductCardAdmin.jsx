@@ -45,7 +45,7 @@ const ProductCardAdmin = ({ producto }) => {
       <p><strong>Presentación:</strong> {producto.presentacion || 'No disponible'}</p>
       <p><strong>Existencias:</strong> {producto.existencias || 0}</p>
       <p><strong>Precio:</strong> ${producto.precio?.toFixed(2) || '0.00'}</p>
-
+<br/>
       <button onClick={() => navigate(`/admin/dashboard/editar-producto/${producto.id}`)} style={styles.btnEditar}>Editar</button>
       <button onClick={handleDelete} style={styles.btnEliminar}>Eliminar</button>
     </div>
@@ -59,7 +59,9 @@ const styles = {
     color: '#fff',
     padding: '0.5rem 1rem',
     border: 'none',
-    borderRadius: '5px'
+    borderRadius: '5px',
+
+    
   },
   btnEliminar: {
     backgroundColor: '#ff4d4f',
