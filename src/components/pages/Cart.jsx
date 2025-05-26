@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import img from '../../img/logo_umbrella.png'; // Asegúrate que esta ruta es correcta
+import img from '../../img/logo_umbrella.png';
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState(() => {
@@ -14,18 +14,8 @@ const Cart = () => {
     localStorage.setItem('cart', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const updatedCart = localStorage.getItem('cart');
-      setCartItems(updatedCart ? JSON.parse(updatedCart) : []);
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   const handleUpdateQuantity = (productId, newQuantity) => {
@@ -35,9 +25,7 @@ const Cart = () => {
     }
     setCartItems(prevItems =>
       prevItems.map(item =>
-        item.id === productId
-          ? { ...item, quantity: newQuantity }
-          : item
+        item.id === productId ? { ...item, quantity: newQuantity } : item
       )
     );
   };
@@ -50,15 +38,8 @@ const Cart = () => {
     <div className="min-h-screen bg-green-50">
       {/* Header con logo */}
       <header className="bg-green-700 text-white py-4 px-6 flex items-center justify-between shadow-md">
-        <div
-          className="flex items-center cursor-pointer"
-          onClick={() => navigate('/dashboard')}
-        >
-          <img
-            src={img}
-            alt="Farmacia Natural Logo"
-            className="h-10 w-auto mr-3"
-          />
+        <div className="flex items-center cursor-pointer" onClick={() => navigate('/dashboard')}>
+          <img src={img} alt="Farmacia Natural Logo" className="h-10 w-auto mr-3" />
           <span className="text-xl font-bold">Farmacia Natural</span>
         </div>
       </header>
@@ -71,9 +52,13 @@ const Cart = () => {
           {cartItems.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-500">Tu carrito está vacío</p>
-              <a href="/products" className="text-green-600 hover:text-green-800 mt-4 inline-block font-medium">
+              <br/>
+      <button
+        onClick={() => navigate('/dashboard')}
+        className="bg-green-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-green-700 transition"
+      >
                 Ver productos
-              </a>
+              </button>
             </div>
           ) : (
             <>
