@@ -1,6 +1,8 @@
 import React from 'react';
 
 const ProductCard = ({ product, onAddToCart }) => {
+  const isOutOfStock = product.stock <= 0;
+
   return (
     <div className="max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105 border border-green-200">
       <img 
@@ -12,21 +14,18 @@ const ProductCard = ({ product, onAddToCart }) => {
         <h3 className="text-xl font-semibold text-green-800 mb-2">{product.name}</h3>
         <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
 
-        {/* Mostrar presentación */}
         {product.presentation && (
           <p className="text-sm text-gray-700 mb-1">
             <span className="font-semibold text-green-700">Presentación:</span> {product.presentation}
           </p>
         )}
 
-        {/* Mostrar ingredientes */}
         {product.ingredients && (
           <p className="text-sm text-gray-700 mb-2">
             <span className="font-semibold text-green-700">Ingredientes:</span> {product.ingredients}
           </p>
         )}
 
-        {/* Mostrar existencias */}
         <p className="text-sm text-gray-500 mb-2">
           <span className="font-semibold text-green-700">Existencias:</span> {product.stock ?? 'N/D'}
         </p>
@@ -35,12 +34,22 @@ const ProductCard = ({ product, onAddToCart }) => {
           <span className="text-lg font-bold text-green-600 block mb-2">
             ${product.price.toFixed(2)}
           </span>
-          <button 
-            onClick={() => onAddToCart(product)}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
-          >
-            Agregar
-          </button>
+
+          {isOutOfStock ? (
+            <button
+              disabled
+              className="px-4 py-2 bg-gray-400 text-white rounded-md cursor-not-allowed"
+            >
+              Sin stock
+            </button>
+          ) : (
+            <button 
+              onClick={() => onAddToCart(product)}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+            >
+              Agregar
+            </button>
+          )}
         </div>
       </div>
     </div>
