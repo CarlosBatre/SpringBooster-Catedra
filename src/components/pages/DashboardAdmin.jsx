@@ -133,25 +133,25 @@ const DashboardAdmin = () => {
           </div>
         )}
 
-        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-          <button
-            style={{ backgroundColor: '#1ba576', width: '7%' }}
-            onClick={() => setPagina((p) => Math.max(p - 1, 0))}
-            disabled={pagina === 0}
-          >
-            Anterior
-          </button>
-          <span style={{ margin: '0 1rem' }}>
-            Página {pagina + 1} de {totalPaginas}
-          </span>
-          <button
-            style={{ backgroundColor: '#1ba576', width: '7%' }}
-            onClick={() => setPagina((p) => Math.min(p + 1, totalPaginas - 1))}
-            disabled={pagina >= totalPaginas - 1}
-          >
-            Siguiente
-          </button>
-        </div>
+              <div style={styles.pagination}>
+                <button
+                  style={styles.button}
+                  onClick={() => setPagina((p) => Math.max(p - 1, 0))}
+                  disabled={pagina === 0}
+                >
+                  Anterior
+                </button>
+                <span style={{ margin: '0 1rem' }}>
+                  Página {pagina + 1} de {totalPaginas}
+                </span>
+                <button
+                  style={styles.button}
+                  onClick={() => setPagina((p) => Math.min(p + 1, totalPaginas - 1))}
+                  disabled={pagina >= totalPaginas - 1}
+                >
+                  Siguiente
+                </button>
+              </div>
       </main>
     </div>
   );
@@ -160,39 +160,62 @@ const DashboardAdmin = () => {
 const styles = {
   main: {
     padding: '2rem',
-    backgroundColor: 'white',
-    color: '#333',
+    backgroundColor: '#f4f4f4',
     minHeight: '100vh',
+    fontFamily: 'Arial, sans-serif',
   },
   titulo: {
     color: '#1f8663',
-    marginBottom: '1rem',
-  },
-  subtitulo: {
-    color: '#2c5f4a',
+    fontSize: '2rem',
     marginBottom: '0.5rem',
   },
-  grid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+  subtitulo: {
+    color: '#1f8663',
+    fontSize: '1.5rem',
+    marginBottom: '1rem',
   },
   filtrosContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: '10px',
+    padding: '1rem 1.5rem',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
     marginBottom: '2rem',
   },
   filtros: {
     display: 'flex',
     flexWrap: 'wrap',
     gap: '1rem',
-    marginTop: '0.5rem',
   },
   input: {
-    padding: '0.5rem',
-    borderRadius: '6px',
+    padding: '0.75rem',
+    borderRadius: '8px',
     border: '1px solid #ccc',
     fontSize: '1rem',
+    backgroundColor: '#e6f2ef',
     minWidth: '200px',
     flex: '1',
+    transition: 'border-color 0.3s ease',
+  },
+  grid: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: '1.5rem',
+  },
+  button: {
+    backgroundColor: '#1ba576',
+    color: '#fff',
+    border: 'none',
+    padding: '0.6rem 1.2rem',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s ease',
+    width: '8%',
+  },
+  pagination: {
+    textAlign: 'center',
+    marginTop: '2rem',
   },
 };
 
