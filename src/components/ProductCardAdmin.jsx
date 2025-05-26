@@ -86,8 +86,11 @@ const cardStyle = {
 
 const imgStyle = {
   width: '100%',
+  height: '200px',              // Altura fija (ajustable según lo que consideres "mediana")
+  objectFit: 'cover',           // Corta la imagen para llenar el contenedor sin deformarla
   borderRadius: '10px',
   marginBottom: '1rem',
+  
 };
 
 export default ProductCardAdmin;
