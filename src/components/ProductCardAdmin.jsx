@@ -47,6 +47,7 @@ const ProductCardAdmin = ({ producto }) => {
       <p><strong>Precio:</strong> ${producto.precio?.toFixed(2) || '0.00'}</p>
 <br/>
       <button onClick={() => navigate(`/admin/dashboard/editar-producto/${producto.id}`)} style={styles.btnEditar}>Editar</button>
+            <br/> <br/>
       <button onClick={handleDelete} style={styles.btnEliminar}>Eliminar</button>
     </div>
   );
