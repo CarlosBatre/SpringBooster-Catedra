@@ -1,6 +1,7 @@
 // src/pages/CrearProducto.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import img from '../../img/logo_umbrella.png';
 
 const CrearProducto = () => {
   const navigate = useNavigate();
@@ -44,9 +45,18 @@ const CrearProducto = () => {
 
   return (
     <div>
-      <header style={styles.header}>
-        <h2 style={styles.headerTitle}>Admin Dashboard</h2>
-      </header>
+<header style={styles.header}>
+  <div style={styles.headerContent}>
+    <img
+      src={img}
+      alt="Logo"
+      style={styles.logo}
+      onClick={() => navigate('/admin/dashboard')}
+    />
+    <h2 style={styles.headerTitle}>Admin Dashboard</h2>
+  </div>
+</header>
+
 
       <div style={styles.container}>
         <div style={styles.formWrapper}>
@@ -99,19 +109,28 @@ const CrearProducto = () => {
 const styles = {
   header: {
     backgroundColor: '#1f8663',
-    padding: '1rem',
+    padding: '1rem 2rem',
     color: '#ffffff',
-    textAlign: 'center',
     position: 'sticky',
     top: 0,
     zIndex: 1000,
   },
+  headerContent: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
+  },
+  logo: {
+    height: '40px',
+    cursor: 'pointer',
+  },
   headerTitle: {
     margin: 0,
     fontSize: '1.5rem',
+    fontWeight: 'bold',
   },
   container: {
-    backgroundColor: '#e6f4f0',
+    backgroundColor: '#f4f4f4',
     minHeight: '100vh',
     display: 'flex',
     justifyContent: 'center',
@@ -120,57 +139,53 @@ const styles = {
   },
   formWrapper: {
     backgroundColor: '#ffffff',
-    padding: '2rem',
-    borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+    padding: '2.5rem 2rem',
+    borderRadius: '16px',
+    boxShadow: '0 6px 18px rgba(0, 0, 0, 0.1)',
     width: '100%',
-    maxWidth: '500px',
-    marginTop: '2rem',
+    maxWidth: '540px',
   },
   title: {
-    marginBottom: '1.5rem',
+    marginBottom: '2rem',
     color: '#1f8663',
     textAlign: 'center',
+    fontSize: '1.75rem',
   },
   form: {
     display: 'grid',
-    gap: '1rem',
+    gap: '1.2rem',
   },
   input: {
     padding: '0.75rem 1rem',
-    borderRadius: '8px',
+    borderRadius: '10px',
     border: '1px solid #ccc',
     fontSize: '1rem',
+    backgroundColor: '#e6f2ef',
     transition: 'border-color 0.3s',
   },
-    buttonGroup: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    gap: '1rem',
+  button: {
+    backgroundColor: '#1f8663',
+    color: '#ffffff',
+    border: 'none',
+    padding: '0.75rem 1.25rem',
+    borderRadius: '10px',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
   },
   cancelButton: {
     backgroundColor: '#ffffff',
     color: '#1f8663',
     border: '2px solid #1f8663',
     padding: '0.75rem 1.25rem',
-    borderRadius: '8px',
+    borderRadius: '10px',
     fontSize: '1rem',
     fontWeight: 'bold',
     cursor: 'pointer',
     transition: 'background-color 0.3s, color 0.3s',
   },
-
-  button: {
-    backgroundColor: '#1f8663',
-    color: '#ffffff',
-    border: 'none',
-    padding: '0.75rem 1.25rem',
-    borderRadius: '8px',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-  },
 };
+
 
 export default CrearProducto;
