@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AgregarUsuarioModal from '../AgregarUsuarioModal';
+import img from '../../img/logo_umbrella.png';
+import { useNavigate } from 'react-router-dom';
 
 const GestionUsuariosAdmin = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -7,7 +9,7 @@ const GestionUsuariosAdmin = () => {
   const [error, setError] = useState(null);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [filtroBusqueda, setFiltroBusqueda] = useState('');
-
+ const navigate = useNavigate(); 
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
@@ -66,12 +68,20 @@ const handleEliminarUsuario = async (id) => {
 
   return (
     <div>
-      <header style={styles.header}>
-        <h2 style={styles.headerText}>Admin Dashboard</h2>
-        <button style={styles.botonAgregarHeader} onClick={() => setModalAbierto(true)}>
-          Agregar Usuario
-        </button>
-      </header>
+<header style={styles.header}>
+  <div style={styles.headerContent}>
+    <img
+      src={img}
+      alt="Logo"
+      style={styles.logo}
+      onClick={() => navigate('/admin/dashboard')}
+    />
+    <h2 style={styles.headerText}>Admin Dashboard</h2>
+    <button style={styles.botonAgregarHeader} onClick={() => setModalAbierto(true)}>
+      Agregar Usuario
+    </button>
+  </div>
+</header>
 
       <main style={styles.container}>
         <h1 style={styles.titulo}>Gestión de Usuarios</h1>
@@ -142,48 +152,59 @@ const handleEliminarUsuario = async (id) => {
 const styles = {
   header: {
     backgroundColor: '#1f8663',
-    padding: '1rem',
-    textAlign: 'center',
+    padding: '1rem 2rem',
     color: 'white',
-    position: 'relative',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+  },
+  headerContent: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  logo: {
+    height: '40px',
+    cursor: 'pointer',
   },
   headerText: {
+    fontSize: '1.5rem',
+    fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center',
     margin: 0,
   },
   botonAgregarHeader: {
-    position: 'absolute',
-    right: '1rem',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     color: '#1f8663',
-    border: '1px solid white',
-    padding: '0.4rem 1rem',
-    borderRadius: '5px',
+    border: '2px solid #ffffff',
+    padding: '0.5rem 1rem',
+    borderRadius: '8px',
+    fontWeight: 'bold',
     cursor: 'pointer',
-    fontSize: '1rem',
-    width: '10%',
+    transition: 'background-color 0.3s, color 0.3s',
+     width: '30%',
   },
   container: {
     padding: '2rem',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#e6f4f0',
+    minHeight: '100vh',
   },
   titulo: {
     color: '#1f8663',
     marginBottom: '1rem',
     textAlign: 'center',
+    fontSize: '2rem',
   },
   inputBusqueda: {
     padding: '0.7rem',
     width: '100%',
-    maxWidth: '400px',
-    marginBottom: '1.5rem',
-    borderRadius: '5px',
+    maxWidth: '420px',
+    margin: '0 auto 2rem auto',
+    borderRadius: '6px',
     border: '1px solid #ccc',
     fontSize: '1rem',
     display: 'block',
-    marginLeft: 'auto',
-    marginRight: 'auto',
   },
   grid: {
     display: 'flex',
@@ -194,36 +215,39 @@ const styles = {
   },
   rolContainer: {
     backgroundColor: '#ffffff',
-    padding: '1rem',
-    borderRadius: '8px',
+    padding: '1.5rem',
+    borderRadius: '12px',
     width: '45%',
-    boxShadow: '0 0 8px rgba(0,0,0,0.1)',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
   },
   rolTitulo: {
     borderBottom: '2px solid #1f8663',
     paddingBottom: '0.5rem',
     marginBottom: '1rem',
-    color: '#2c5f4a',
+    color: '#1f8663',
+    fontSize: '1.25rem',
   },
   usuarioCard: {
-    backgroundColor: '#eefaf6',
-    borderRadius: '6px',
+    backgroundColor: '#d8f3e8',
+    borderRadius: '8px',
     padding: '1rem',
     marginBottom: '1rem',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    border: '1px solid #b2dfc7',
   },
   botonEliminar: {
     backgroundColor: '#e63946',
     color: 'white',
     border: 'none',
-    padding: '0.3rem 0.6rem',
-    fontSize: '0.85rem',
-    borderRadius: '5px',
+    padding: '0.4rem 0.8rem',
+    fontSize: '0.9rem',
+    borderRadius: '6px',
     cursor: 'pointer',
-    width: '15%',
+    width: '30%',
   },
 };
+
 
 export default GestionUsuariosAdmin;
